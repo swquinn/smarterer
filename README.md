@@ -29,3 +29,5 @@ TBW
 
 1. http://flask.pocoo.org/
 2. http://mattupstate.com/python/2013/06/26/how-i-structure-my-flask-applications.html
+3. http://pythonhosted.org/Flask-SQLAlchemy/
+4. https://www.python.org/dev/peps/pep-0008/

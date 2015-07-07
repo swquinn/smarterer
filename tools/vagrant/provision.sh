@@ -25,9 +25,32 @@
 # OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 # SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
+IP_ADDRESS="$(ifconfig | grep '\<inet\>' | sed -n '1p' | tr -s ' ' | cut -d ' ' -f3 | cut -d ':' -f2)"
+
 echo -e "[INFO ] Installing python tools and dependencies..."
 sudo apt-get update
 sudo apt-get install -y python2.7 python2.7-dev python-pip
 
-echo -e "[INFO ] Installing flask..."
+echo -e "[INFO ] Installing Flask..."
 pip install Flask
+
+echo -e "[INFO ] Installing SQLAlchemy..."
+pip install sqlalchemy
+
+echo -e "[INFO ] Installing Flask-SQLAlchemy..."
+pip install Flask-SQLAlchemy
+
+echo -e "[INFO ] Installing postgres and resetting password for: 'postgres' to: 'postgres'..."
+sudo apt-get install -y postgresql postgresql-contrib
+sudo -u postgres psql --command "ALTER USER postgres WITH PASSWORD 'postgres';"
+sudo -u postgres psql --command "CREATE EXTENSION adminpack;"
+
+echo -e "[INFO ] Creating database: 'smarterer'..."
+sudo -u postgres createdb smarterer
+
+echo -e "[INFO ] Configuring postgres for host accessibility..."
+sudo sed -i "s/^#listen_addresses\s=\s.*$/listen_addresses = '*'/" /etc/postgresql/9.4/main/postgresql.conf
+sudo sh -c "echo 'host all all $IP_ADDRESS/24 trust' >> /etc/postgresql/9.4/main/pg_hba.conf"
+
+echo -e "[INFO ] Restarting postgres service..."
+sudo service postgresql restart

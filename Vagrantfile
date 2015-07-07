@@ -88,6 +88,8 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   ### Host-to-Guest Port Forwarding
   config.vm.network :forwarded_port, guest: 80, host: 9090
   config.vm.network :forwarded_port, guest: 443, host: 9443
+  config.vm.network :forwarded_port, guest: 5000, host: 5000
+  config.vm.network :forwarded_port, guest: 5432, host: 5432
 
   ### VirtualBox Provider Configuration
   config.vm.provider :virtualbox do |vb|
