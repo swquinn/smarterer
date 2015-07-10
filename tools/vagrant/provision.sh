@@ -41,7 +41,7 @@ echo -e "[INFO ] Installing Flask-SQLAlchemy..."
 pip install Flask-SQLAlchemy
 
 echo -e "[INFO ] Installing postgres and resetting password for: 'postgres' to: 'postgres'..."
-sudo apt-get install -y postgresql postgresql-contrib
+sudo apt-get install -y postgresql postgresql-contrib postgresql-server-dev-all
 sudo -u postgres psql --command "ALTER USER postgres WITH PASSWORD 'postgres';"
 sudo -u postgres psql --command "CREATE EXTENSION adminpack;"
 
@@ -54,3 +54,6 @@ sudo sh -c "echo 'host all all $IP_ADDRESS/24 trust' >> /etc/postgresql/9.4/main
 
 echo -e "[INFO ] Restarting postgres service..."
 sudo service postgresql restart
+
+echo -e "[INFO ] Installing psycopg2..."
+pip install psycopg2

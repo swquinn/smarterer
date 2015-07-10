@@ -23,30 +23,16 @@
 # OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT
 # OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 # SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-import os
-import json
-from flask import Flask, jsonify, request, make_response, render_template
-from flask.ext.sqlalchemy import SQLAlchemy
+from flask.json import JSONEncoder
 
-app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'postgres://postgres:postgres@localhost/smarterer'
-# TODO: Getting errors about Flask having "no attribute 'json'"
-#app.json_encoder = app.json.encoder.JSONEncoder
-db = SQLAlchemy(app)
+class JSONEncoder(JSONEncoder):
 
-def json_response(content, status=200, headers={}):
-    """Returns a JSON response inclusive of the content and status.
-
-    Keyword arguments:
-    content -- the content to be rendered in the JSON response
-    status -- optional. The status code to return (default 200)
-    headers -- optional. Additional headers to include in the response
-    """
-    #data = json.dumps(content)
-    #response = make_response(data, status)
-    response = jsonify(content)
-    response.status_code = status
-    return response
-
-from app.models.question import Question
-from app.controller import index, question, questions
+    def default(self, obj):
+        if isinstance(obj, Question):
+            return {
+                'id': obj.id,
+                'text': obj.text,
+                'answer': obj.answer,
+                'choices': [item.strip() for item in obj.choices.split(',')]
+            }
+        return super(JSONEncoder, self).default(obj)

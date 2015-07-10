@@ -23,30 +23,29 @@
 # OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT
 # OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 # SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-import os
-import json
-from flask import Flask, jsonify, request, make_response, render_template
-from flask.ext.sqlalchemy import SQLAlchemy
+from app import app, db, json_response
+from app.models.question import Question
 
-app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'postgres://postgres:postgres@localhost/smarterer'
-# TODO: Getting errors about Flask having "no attribute 'json'"
-#app.json_encoder = app.json.encoder.JSONEncoder
-db = SQLAlchemy(app)
-
-def json_response(content, status=200, headers={}):
-    """Returns a JSON response inclusive of the content and status.
+@app.route('/question/<int:question_id>', methods=['GET'])
+def get_question(question_id):
+    """Returns a specific question, by its question ID, which is passed
+    in as a parameter to the call.
 
     Keyword arguments:
-    content -- the content to be rendered in the JSON response
-    status -- optional. The status code to return (default 200)
-    headers -- optional. Additional headers to include in the response
+    question_id -- the identifier of the question being interacted with
     """
-    #data = json.dumps(content)
-    #response = make_response(data, status)
-    response = jsonify(content)
-    response.status_code = status
-    return response
+    question = Question.query.filter_by(id=question_id).first()
+    return json_response(question.to_dict())
 
-from app.models.question import Question
-from app.controller import index, question, questions
+@app.route('/question/<int:question_id>', methods=['PUT', 'PATCH'])
+def update_question(question_id):
+    """Handles requests to a specific question, identified by that
+    questions ID, which is passed in as a parameter to the call.
+
+    Keyword arguments:
+    question_id -- the identifier of the question being interacted with
+    """
+    data = request.form
+    question = Question.query.filter_by(id=question_id).first()
+    question.update(data)
+    return json_response(None, 204)
