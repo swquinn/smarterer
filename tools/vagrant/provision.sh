@@ -57,3 +57,7 @@ sudo service postgresql restart
 
 echo -e "[INFO ] Installing psycopg2..."
 pip install psycopg2
+
+echo -e "[INFO ] Building database..."
+cd /vagrant
+python /vagrant/database.py
