@@ -56,7 +56,8 @@ class Question(db.Model, ):
     def delete(self):
         """Deletes this question.
         """
-        # TODO
+        db.session.delete(self)
+        db.session.commit()
 
     def to_dict(self):
         """Returns the question as a dictionary to allow for JSON
@@ -74,7 +75,13 @@ class Question(db.Model, ):
     def update(self, data):
         """Updates this question with passed data.
         """
-        # TODO
+        if 'text' in data:
+            self.text = data['text']
+        if 'answer' in data:
+            self.answer = data['answer']
+        if 'choices' in data:
+            self.choices = data['choices']
+        db.session.commit()
 
     def get_all_choices(self):
         """Returns an unordered set of all the possible answer choices

@@ -1,5 +1,94 @@
 {% extends "layout.html" %}
 
 {% block body %}
-Hello!
+<div class="container">
+  <div class="row">
+    <h1>Smarterer API Reference</h1>
+  </div>
+
+  <div class="row">
+    <h2>API Reference</h2>
+    <p>The API is wholly JSON centric, this means that all requests and responses should (unless I missed something!) be in JSON. Any action that is a <tt>POST</tt>, <tt>PUT</tt>, or <tt>PATCH</tt> should be sending a JSON object as its payload, e.g.</p>
+    <div>
+<pre>
+<code>
+{
+  'text': 'What is your favorite color?',
+  'answer': 'blue',
+  'choices': 'yellow,green'
+}
+</code>
+</pre>
+    </div>
+  </div>
+
+  <div class="row">
+    <h4>GET <tt>/questions</tt></h4>
+    <p>Returns a list of all the questions that are tracked by the service. This resource can take optional query parameters in the form of:</p>
+    <div>
+      <strong>GET</strong> <tt>/questions?[limit=n][&amp;page=n][&amp;sortby=str][&amp;sort=n|str]</tt>
+    </div>
+    <div>
+      <strong>Optional Query Params:</strong>
+      <ul>
+        <li><tt>limit</tt> - allows you to limit the number of results. The parameter should be a number, e.g. 50. If both <tt>limit</tt> and <tt>page</tt> are specified <tt>limit</tt> will act as the throttle for the number of items to show per page.</li>
+        <li><tt>page</tt> - forces pagination of the data results and displays the page number specified. If both <tt>limit</tt> and <tt>page</tt> are specified the number of results per <tt>page</tt> will be restricted to the value specified for <tt>limit</tt>, otherwise a default value of 10 will be used.</li>
+        <li><tt>sortby</tt> - the questions can be sorted by the field names of a question e.g. <i>text</i>, <i>answer</i>, or <i>choices</i>.</li>
+        <li><tt>sort</tt> - the direction that the ordering should be displayed in. Accepts either <tt>1</tt> or <tt>-1</tt> for ascending and descending respectively, <tt>sort</tt> will also accept values: <i>asc</i>, <i>ascending</i>, <i>desc</i>, and <i>descending</i>.</lI>
+      </ul>
+    </div>
+  </div>
+
+  <div class="row">
+    <h4>POST <tt>/questions</tt></h4>
+    <p>Creates a new question, with the data passed along to the server.</p>
+    <div>
+      <strong>POST</strong> <tt>/questions/create</tt>
+<pre>
+<code>
+{
+  'text': 'What is your favorite color?',
+  'answer': 'blue',
+  'choices': 'yellow,green'
+}
+</code>
+</pre>
+      </div>
+    </div>
+
+    <div class="row">
+      <h4>DELETE <tt>/question/&lt;question_id&gt;</tt></h4>
+      <p>Deletes the question whose ID is specified by <tt>&lt;question_id&gt;</tt>. The API expects a positive integer (_1,2,3,..n_) as the <tt>&lt;question_id&gt;</tt> parameter. If no question is found matching the passed ID, a <tt>404</tt> error will be returned.</p>
+      <div>
+        <strong>DELETE</strong> <tt>/question/1</tt>
+      </div>
+    </div>
+
+    <div class="row">
+      <h4>GET <tt>/question/&lt;question_id&gt;</tt></h4>
+      <p>Returns the question with the matching <tt>&lt;question_id&gt;</tt>. The API expects a positive integer (_1,2,3,..n_) as the <tt>&lt;question_id&gt;</tt> parameter. If no question is found matching the passed ID, a <tt>404</tt> error will be returned.</p>
+      <div>
+        <strong>GET</strong> <tt>/question/1</tt>
+      </div>
+    </div>
+
+    <div class="row">
+      <h4>PUT,PATCH <tt>/question/&lt;question_id&gt;</tt></h4>
+      <p>Updates the question whose ID is specified by <tt>&lt;question_id&gt;</tt>. The API expects a positive integer (_1,2,3,..n_) as the <tt>&lt;question_id&gt;</tt> parameter. If no question is found matching the passed ID, a <tt>404</tt> error will be returned.</p>
+      <p>The update request may contain some-or-all of the question attributes (i.e. <i>text</i>, <i>answer</i>, <i>choices</i>) only those supplied in the update will be modified. If you supply an unknown key and value, it will be ignored.</p>
+      <div>
+        <ul>
+          <li><strong>PUT</strong> <tt>/question/1</tt></li>
+          <li><strong>PATCH</strong> <tt>/question/1</tt></li>
+        </ul>
+<pre>
+<code>
+{
+  'answer': 'purple',
+  'choices': 'yellow,green,blue'
+}
+</code>
+</pre>
+      </div>
+    </div>
 {% endblock %}

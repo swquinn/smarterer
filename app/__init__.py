@@ -34,6 +34,22 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'postgres://postgres:postgres@localhost/
 #app.json_encoder = app.json.encoder.JSONEncoder
 db = SQLAlchemy(app)
 
+err_messages = {
+    404: 'We couldn\'t find that resource you were looking for.',
+    405: 'The method you\'ve requested this resource with is not supported.',
+    500: 'Oops! It looks like something went very, very wrong.'
+}
+@app.errorhandler(404)
+@app.errorhandler(405)
+@app.errorhandler(500)
+def error_page(error):
+    resp = {
+        'code': error.code,
+        'message': error.name,
+        'description': err_messages[error.code]
+    }
+    return json_response(resp, error.code)
+
 def json_response(content, status=200, headers={}):
     """Returns a JSON response inclusive of the content and status.
 

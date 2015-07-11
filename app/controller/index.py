@@ -25,6 +25,7 @@
 # SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 from app import app, db, json_response
 from app.models.question import Question
+from flask import Flask, jsonify, request, make_response, render_template
 
 @app.route('/')
 def index():
